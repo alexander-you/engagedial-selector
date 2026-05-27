@@ -823,3 +823,48 @@
   border-top: 1px solid #efefef;
 }
 
+/* ============================================================
+   INVALID PHONE NUMBER STATE
+   ============================================================ */
+
+/* Invalid card — not selectable; muted appearance */
+.engagedial-phone-card--invalid {
+  cursor: default;
+  opacity: 1;
+  background: #fdf6f6;
+  border-color: #fde7e7;
+}
+
+.engagedial-phone-card--invalid:hover {
+  background: #fdf6f6;
+  border-color: #fde7e7;
+}
+
+/* Warning icon replaces the radio circle */
+.engagedial-phone-card__invalid-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+/* Phone number text — muted for invalid */
+.engagedial-phone-card--invalid .engagedial-phone-card__number {
+  color: #8a8a8a;
+}
+
+.engagedial-phone-card--invalid .engagedial-phone-card__label {
+  color: #a0a0a0;
+}
+
+/* "Invalid format" inline message — shown below the number row */
+.engagedial-phone-card__invalid-msg {
+  width: 100%;
+  font-size: 11px;
+  color: #C50F1F;
+  margin-top: 2px;
+  padding-left: 22px; /* aligns under the number text */
+}
+

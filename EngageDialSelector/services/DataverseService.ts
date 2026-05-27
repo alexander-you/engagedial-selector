@@ -1,14 +1,17 @@
 /**
  * Proactive Engagement Phone Selector — Dataverse Web API Service
- * Version: 1.0.2
+ * Version: 1.0.6
  *
  * Retrieves customer information and phone numbers from Dataverse using the
  * PCF Web API context. Phone field sets are passed in at runtime from the
  * PCF manifest configuration properties, allowing system customizers to
  * control which fields are queried and displayed per control instance.
+ * Phone numbers are validated and normalized to E.164 format before being
+ * returned; invalid numbers are included in the list but flagged accordingly.
  */
 
 import { PhoneNumber, CustomerInfo, PhoneFieldDef } from "../types";
+import { validatePhone } from "../utils/phoneValidation";
 
 // ---------------------------------------------------------------------------
 // OData annotation keys produced by the Dataverse Web API for polymorphic
@@ -95,15 +98,27 @@ function extractPhoneNumbers(
   record: ComponentFramework.WebApi.Entity,
   fieldDefs: readonly PhoneFieldDef[]
 ): PhoneNumber[] {
-  const seen = new Set<string>();
+  const seenRaw = new Set<string>();
+  const seenNormalized = new Set<string>();
   const phones: PhoneNumber[] = [];
 
   for (const def of fieldDefs) {
     const value = getEntityString(record, def.field);
-    if (value && !seen.has(value)) {
-      seen.add(value);
-      phones.push({ label: def.label, number: value, fieldName: def.field });
+    if (!value) continue;
+
+    // Deduplicate by raw value first
+    if (seenRaw.has(value)) continue;
+    seenRaw.add(value);
+
+    const { isValid, normalized } = validatePhone(value);
+
+    // Also deduplicate valid numbers by their normalized form
+    if (isValid && normalized) {
+      if (seenNormalized.has(normalized)) continue;
+      seenNormalized.add(normalized);
     }
+
+    phones.push({ label: def.label, number: value, fieldName: def.field, isValid, normalized });
   }
 
   return phones;

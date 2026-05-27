@@ -1,6 +1,6 @@
 /**
  * EngageDial Selector — Shared TypeScript Types
- * Version: 1.0.2
+ * Version: 1.0.6
  */
 
 /** A phone field definition with its source field name and display label. */
@@ -12,8 +12,13 @@ export interface PhoneFieldDef {
 /** A single phone number entry with its display label and source field name. */
 export interface PhoneNumber {
   label: string;
+  /** Raw value as stored in Dataverse. */
   number: string;
   fieldName: string;
+  /** True when the number passes E.164 validation. Invalid numbers are shown but not selectable. */
+  isValid: boolean;
+  /** E.164 normalized value (e.g. "+972542556677") when isValid is true; null otherwise. */
+  normalized: string | null;
 }
 
 /** Resolved customer information from the Case customerid lookup. */

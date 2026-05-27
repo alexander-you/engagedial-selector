@@ -1,6 +1,6 @@
 /**
  * Proactive Engagement Phone Selector — Main React Application Component
- * Version: 1.0.4
+ * Version: 1.0.6
  *
  * Renders the full control UI. Supports five visual states:
  *   loading     → spinner while fetching customer data
@@ -194,6 +194,17 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
   const handlePrepare = useCallback(() => {
     if (!selectedPhone || !customer) return;
 
+    // Locate the full PhoneNumber entry to use the normalized E.164 value
+    const selectedEntry = phoneNumbers.find((p) => p.number === selectedPhone);
+
+    // Defensive: block submission if the selected entry is invalid or has no normalized value
+    if (!selectedEntry?.isValid || !selectedEntry.normalized) {
+      setErrorMessage(
+        "Invalid phone number format. Please update the customer phone number before preparing proactive engagement."
+      );
+      return;
+    }
+
     try {
       const caseId = getCaseId() ?? "";
       const contextAccess = context as unknown as { userSettings?: PCFUserSettings };
@@ -203,12 +214,10 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
       // downstream Flow receives a clean GUID (e.g. "d8d38f1e-10c4-f011-...").
       const initiatedBy = rawUserId.replace(/^\{(.+)\}$/, "$1").toLowerCase();
 
-      // Locate the full PhoneNumber entry to include optional diagnostic fields.
-      const selectedEntry = phoneNumbers.find((p) => p.number === selectedPhone);
-
       const payload = {
         RequestId: generateGuid(),
-        DestinationPhoneNumber: selectedPhone,
+        // Use the E.164 normalized value, not the raw string from Dataverse
+        DestinationPhoneNumber: selectedEntry.normalized,
         // ContactId is set only for Contact customers; Account ID must not flow here.
         ContactId: customer.entityType === "contact" ? customer.id : null,
         CustomerId: customer.id,
@@ -217,10 +226,8 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
         InitiatedBy: initiatedBy,
         InitiatedOn: new Date().toISOString(),
         Source: "Proactive Engagement Phone Selector",
-        ...(selectedEntry && {
-          SelectedPhoneField: selectedEntry.fieldName,
-          SelectedPhoneLabel: selectedEntry.label,
-        }),
+        SelectedPhoneField: selectedEntry.fieldName,
+        SelectedPhoneLabel: selectedEntry.label,
       };
 
       onPayloadReady(JSON.stringify(payload));
@@ -258,8 +265,10 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
       return customer ? `${customer.name} · ${typeLabel} · No phone numbers` : "No phone numbers";
     }
 
-    const count = phoneNumbers.length;
-    return `${customer?.name ?? ""} · ${typeLabel} · ${count} number${count !== 1 ? "s" : ""} available`;
+    const validCount = phoneNumbers.filter((p) => p.isValid).length;
+    const invalidCount = phoneNumbers.length - validCount;
+    const countLabel = `${validCount} number${validCount !== 1 ? "s" : ""} available${invalidCount > 0 ? ` · ${invalidCount} invalid` : ""}`;
+    return `${customer?.name ?? ""} · ${typeLabel} · ${countLabel}`;
   }
 
   // ---------------------------------------------------------------------------
@@ -366,7 +375,7 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
           <button
             className="engagedial-btn engagedial-btn-primary"
             onClick={handlePrepare}
-            disabled={!selectedPhone}
+            disabled={!selectedPhone || !phoneNumbers.find((p) => p.number === selectedPhone)?.isValid}
             aria-label="Prepare proactive engagement with selected phone number"
           >
             <CheckIcon />

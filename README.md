@@ -1,6 +1,6 @@
 # Proactive Engagement Phone Selector
 
-> **Version:** v1.0.5  
+> **Version:** v1.0.6  
 > **Internal Name:** EngageDial Selector  
 > **Target Table:** Case (`incident`)  
 > **Control Type:** PCF Field Control (Virtual / React)  
@@ -484,7 +484,8 @@ pac solution import \
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| v1.0.5 | 2026-05-27 | Alex Yurpolsky | UI refinement of collapsed header: removed redundant "Proactive Engagement Phone Selector" title from inside the PCF toggle bar (Dynamics form label already provides it). Added a subtle neutral phone line icon aligned with the meta summary text. Collapsed state now shows a clean single-line summary: `[icon] Adi Sharon · Contact · 4 numbers available [chevron]`. Removed `CardHeader` from non-ready states (loading, error, no-customer, no-phones) to avoid title repetition. Version bumped from 1.0.4 to 1.0.5 to bust browser cache. |
+| v1.0.6 | 2026-05-27 | Alex Yurpolsky | Added client-side phone number validation and E.164 normalization. Invalid numbers (missing `+` prefix, wrong length, unsupported format) are shown in the list but marked with a warning icon and "Invalid format" label — they cannot be selected. The `Prepare engagement` button remains disabled until a valid number is selected. The `DestinationPhoneNumber` field in the JSON payload now always contains the E.164 normalized value (e.g. `+972542556677`), not the raw Dataverse value. A defensive server-side check remains recommended in the downstream Flow. |
+| v1.0.5 | 2026-05-27 | Alex Yurpolsky | UI refinement of collapsed header: removed redundant title from toggle bar; added subtle neutral phone line icon; collapsed state shows clean single-line summary. Removed CardHeader from non-ready states. Version bump to bust browser cache. |
 | v1.0.4 | 2026-05-27 | Alex Yurpolsky | Added configurable `Default Display Mode` PCF property (Expanded / Collapsed / Auto). Expanded: control loads fully open. Collapsed: loads with compact summary header only. Auto: loads expanded when `alex_proactive_engagement` is empty, collapsed when a payload already exists. Added expand/collapse toggle bar with chevron icon, customer name, customer type, and number of available phones. Collapsed state preserves selected phone number and shows it in the summary. |
 | v1.0.3 | 2026-05-27 | Alex Yurpolsky | Fixed PCF Enum property resolution: `EnumProperty.raw` returns text content (display label), not the `name` attribute — label-to-field maps corrected accordingly. Fixed empty-string fallback (`??` → ternary) for unconfigured Enum properties. Updated JSON payload to align with downstream Flow/action parameters: `DestinationPhoneNumber` replaces `selectedPhoneNumber`; all fields now PascalCase; `ContactId` added (Contact ID when customer is Contact, `null` for Account); `InitiatedBy` normalised to clean lowercase GUID. Optional diagnostic fields `SelectedPhoneField` and `SelectedPhoneLabel` added. |
 | v1.0.2 | 2026-05-27 | Alex Yurpolsky | Added 8 configurable PCF input properties (Contact Number 1–4, Account Number 1–4). System customizers can now select which phone fields appear per control instance using predefined dropdowns. New Account field: `address1_telephone1` (Address Phone). Defaults preserve existing behavior. |
