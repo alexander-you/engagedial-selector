@@ -2,7 +2,7 @@
 <manifest>
   <control namespace="EngageDial"
            constructor="EngageDialSelector"
-           version="1.0.3"
+           version="1.0.5"
            display-name-key="Proactive Engagement Phone Selector"
            description-key="Displays available phone numbers from the Case customer and prepares the selected number for proactive engagement."
            control-type="virtual">
@@ -22,6 +22,17 @@
               of-type="Lookup.Customer"
               usage="bound"
               required="false" />
+
+    <property name="displayMode"
+              display-name-key="Default Display Mode"
+              description-key="Controls whether the phone selector loads expanded or collapsed. Expanded shows the full UI. Collapsed shows a compact summary header. Auto collapses automatically when an existing engagement payload is already present in the field."
+              of-type="Enum"
+              usage="input"
+              required="false">
+      <value name="Expanded"  display-name-key="Expanded">Expanded</value>
+      <value name="Collapsed" display-name-key="Collapsed">Collapsed</value>
+      <value name="Auto"      display-name-key="Auto">Auto</value>
+    </property>
 
     <property name="contactField1"
               display-name-key="Contact Number 1"

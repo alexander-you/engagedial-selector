@@ -1,6 +1,6 @@
 /**
  * Proactive Engagement Phone Selector — Main React Application Component
- * Version: 1.0.3
+ * Version: 1.0.4
  *
  * Renders the full control UI. Supports five visual states:
  *   loading     → spinner while fetching customer data
@@ -39,6 +39,17 @@ export interface IEngageDialSelectorAppProps {
   contactFields: PhoneFieldDef[];
   /** Resolved Account phone fields from the manifest configuration properties. */
   accountFields: PhoneFieldDef[];
+  /**
+   * Initial panel display mode from the manifest "Default Display Mode" property.
+   * Expanded = always open; Collapsed = always closed initially;
+   * Auto = collapsed when an existing engagement payload is present.
+   */
+  defaultDisplayMode: "Expanded" | "Collapsed" | "Auto";
+  /**
+   * The current raw value of alex_proactive_engagement when the control loads.
+   * Used only for Auto mode to decide the initial expanded/collapsed state.
+   */
+  currentEngagementValue: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -63,6 +74,8 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
   customerReloadVersion,
   contactFields,
   accountFields,
+  defaultDisplayMode,
+  currentEngagementValue,
 }) => {
   const [controlState, setControlState] = useState<ControlState>("loading");
   const [customer, setCustomer] = useState<CustomerInfo | null>(null);
@@ -70,6 +83,14 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successVisible, setSuccessVisible] = useState(false);
+
+  // Expand/collapse state — initialised once from the configured default.
+  // The lazy initialiser runs only on mount; user toggling takes over after that.
+  const [isPanelExpanded, setIsPanelExpanded] = useState<boolean>(() => {
+    if (defaultDisplayMode === "Collapsed") return false;
+    if (defaultDisplayMode === "Auto") return !currentEngagementValue;
+    return true; // "Expanded" (default)
+  });
 
   // Re-run whenever the parent signals that customerid changed.
   useEffect(() => {
@@ -214,13 +235,49 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
     }
   }, [selectedPhone, customer, phoneNumbers, context, onPayloadReady]);
 
+  const handleToggle = useCallback(() => {
+    setIsPanelExpanded((prev) => !prev);
+  }, []);
+
+  // ---------------------------------------------------------------------------
+  // Collapsed meta line — describes the current state in one short line
+  // ---------------------------------------------------------------------------
+
+  function getCollapsedMeta(): string {
+    if (controlState === "loading") return "Loading...";
+    if (controlState === "error") return "Unable to load customer data";
+    if (controlState === "no-customer") return "No customer selected";
+
+    if (selectedPhone) {
+      const found = phoneNumbers.find((p) => p.number === selectedPhone);
+      return `Selected: ${selectedPhone}${found ? ` · ${found.label}` : ""}`;
+    }
+
+    const typeLabel = customer?.entityType === "contact" ? "Contact" : "Account";
+    if (controlState === "no-phones" || phoneNumbers.length === 0) {
+      return customer ? `${customer.name} · ${typeLabel} · No phone numbers` : "No phone numbers";
+    }
+
+    const count = phoneNumbers.length;
+    return `${customer?.name ?? ""} · ${typeLabel} · ${count} number${count !== 1 ? "s" : ""} available`;
+  }
+
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
 
   return (
     <div className="engagedial-root">
-      <div className="engagedial-card">{renderContent()}</div>
+      <div className="engagedial-card engagedial-card--collapsible">
+        <ToggleBar
+          isExpanded={isPanelExpanded}
+          meta={getCollapsedMeta()}
+          onToggle={handleToggle}
+        />
+        {isPanelExpanded && (
+          <div className="engagedial-body">{renderContent()}</div>
+        )}
+      </div>
     </div>
   );
 
@@ -228,33 +285,27 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
     // --- Loading ---
     if (controlState === "loading") {
       return (
-        <>
-          <CardHeader showSubtitle={false} />
-          <div className="engagedial-state-loading">
-            <div className="engagedial-spinner" />
-            <span>Loading customer phone numbers...</span>
-          </div>
-        </>
+        <div className="engagedial-state-loading">
+          <div className="engagedial-spinner" />
+          <span>Loading customer phone numbers...</span>
+        </div>
       );
     }
 
     // --- No customer ---
     if (controlState === "no-customer") {
       return (
-        <>
-          <CardHeader showSubtitle={false} />
-          <div className="engagedial-state-info">
-            <div className="engagedial-state-icon">
-              <InfoIcon />
-            </div>
-            <h4 className="engagedial-state-title">No customer selected</h4>
-            <p className="engagedial-state-message">
-              No customer is selected on this Case.
-              <br />
-              Please select a customer before starting a proactive engagement.
-            </p>
+        <div className="engagedial-state-info">
+          <div className="engagedial-state-icon">
+            <InfoIcon />
           </div>
-        </>
+          <h4 className="engagedial-state-title">No customer selected</h4>
+          <p className="engagedial-state-message">
+            No customer is selected on this Case.
+            <br />
+            Please select a customer before starting a proactive engagement.
+          </p>
+        </div>
       );
     }
 
@@ -262,7 +313,6 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
     if (controlState === "no-phones") {
       return (
         <>
-          <CardHeader showSubtitle={false} />
           {customer && <CustomerRow customer={customer} />}
           <div className="engagedial-state-info">
             <div className="engagedial-state-icon">
@@ -280,16 +330,13 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
     // --- Error ---
     if (controlState === "error") {
       return (
-        <>
-          <CardHeader showSubtitle={false} />
-          <div className="engagedial-state-info">
-            <div className="engagedial-state-icon">
-              <WarningIcon />
-            </div>
-            <h4 className="engagedial-state-title">Something went wrong</h4>
-            <p className="engagedial-state-message">{errorMessage}</p>
+        <div className="engagedial-state-info">
+          <div className="engagedial-state-icon">
+            <WarningIcon />
           </div>
-        </>
+          <h4 className="engagedial-state-title">Something went wrong</h4>
+          <p className="engagedial-state-message">{errorMessage}</p>
+        </div>
       );
     }
 
@@ -354,6 +401,61 @@ export const EngageDialSelectorApp: React.FC<IEngageDialSelectorAppProps> = ({
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
+
+const ToggleBar: React.FC<{
+  isExpanded: boolean;
+  meta: string;
+  onToggle: () => void;
+}> = ({ isExpanded, meta, onToggle }) => (
+  <button
+    className="engagedial-toggle-bar"
+    onClick={onToggle}
+    aria-expanded={isExpanded}
+    aria-label={isExpanded ? "Collapse phone selector" : "Expand phone selector"}
+  >
+    <PhoneLineIcon />
+    <span className="engagedial-toggle-bar__meta">{meta}</span>
+    <ChevronIcon expanded={isExpanded} />
+  </button>
+);
+
+const ChevronIcon: React.FC<{ expanded: boolean }> = ({ expanded }) => (
+  <svg
+    className={`engagedial-chevron${expanded ? " engagedial-chevron--up" : ""}`}
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M4 6l4 4 4-4"
+      stroke="#616161"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+/* Fluent UI PhoneRegular path — neutral, lightweight, 16×16 */
+const PhoneLineIcon: React.FC = () => (
+  <svg
+    className="engagedial-toggle-bar__phone-icon"
+    width="14"
+    height="14"
+    viewBox="0 0 20 20"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M5.11 2.17a1.25 1.25 0 0 0-1.7.03L2.1 3.52A2.75 2.75 0 0 0 1.42 6.6c1.06 3.18 2.9 6.06 5.4 8.56 2.5 2.5 5.38 4.34 8.56 5.4a2.75 2.75 0 0 0 3.08-.68l1.32-1.31a1.25 1.25 0 0 0 .03-1.7l-2.4-2.59a1.25 1.25 0 0 0-1.6-.22l-1.74 1.1a1 1 0 0 1-1.1-.04 17.5 17.5 0 0 1-4.1-4.1 1 1 0 0 1-.03-1.1l1.1-1.73a1.25 1.25 0 0 0-.23-1.61L5.11 2.17Z"
+      stroke="#616161"
+      strokeWidth="1.25"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 const CardHeader: React.FC<{ showSubtitle: boolean }> = ({ showSubtitle }) => (
   <div className="engagedial-header">

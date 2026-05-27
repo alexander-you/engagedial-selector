@@ -153,12 +153,24 @@ export class EngageDialSelector
       ACCOUNT_LABEL_TO_FIELD
     );
 
+    // Resolve the display mode property (defaults to "Expanded" when unconfigured).
+    const rawDisplayMode = (p as unknown as Record<string, {raw: string | null}>).displayMode?.raw;
+    const defaultDisplayMode = (rawDisplayMode != null && rawDisplayMode !== "")
+      ? rawDisplayMode as "Expanded" | "Collapsed" | "Auto"
+      : "Expanded";
+
+    // Pass the current engagement field value so the React component can
+    // determine the initial panel state when defaultDisplayMode is "Auto".
+    const currentEngagementValue = context.parameters.engagementField?.raw ?? "";
+
     return React.createElement(EngageDialSelectorApp, {
       context,
       onPayloadReady: this._handlePayloadReady,
       customerReloadVersion: this._customerReloadVersion,
       contactFields,
       accountFields,
+      defaultDisplayMode,
+      currentEngagementValue,
     });
   }
 

@@ -1,6 +1,6 @@
 # Proactive Engagement Phone Selector
 
-> **Version:** v1.0.3  
+> **Version:** v1.0.5  
 > **Internal Name:** EngageDial Selector  
 > **Target Table:** Case (`incident`)  
 > **Control Type:** PCF Field Control (Virtual / React)  
@@ -484,6 +484,8 @@ pac solution import \
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| v1.0.5 | 2026-05-27 | Alex Yurpolsky | UI refinement of collapsed header: removed redundant "Proactive Engagement Phone Selector" title from inside the PCF toggle bar (Dynamics form label already provides it). Added a subtle neutral phone line icon aligned with the meta summary text. Collapsed state now shows a clean single-line summary: `[icon] Adi Sharon · Contact · 4 numbers available [chevron]`. Removed `CardHeader` from non-ready states (loading, error, no-customer, no-phones) to avoid title repetition. Version bumped from 1.0.4 to 1.0.5 to bust browser cache. |
+| v1.0.4 | 2026-05-27 | Alex Yurpolsky | Added configurable `Default Display Mode` PCF property (Expanded / Collapsed / Auto). Expanded: control loads fully open. Collapsed: loads with compact summary header only. Auto: loads expanded when `alex_proactive_engagement` is empty, collapsed when a payload already exists. Added expand/collapse toggle bar with chevron icon, customer name, customer type, and number of available phones. Collapsed state preserves selected phone number and shows it in the summary. |
 | v1.0.3 | 2026-05-27 | Alex Yurpolsky | Fixed PCF Enum property resolution: `EnumProperty.raw` returns text content (display label), not the `name` attribute — label-to-field maps corrected accordingly. Fixed empty-string fallback (`??` → ternary) for unconfigured Enum properties. Updated JSON payload to align with downstream Flow/action parameters: `DestinationPhoneNumber` replaces `selectedPhoneNumber`; all fields now PascalCase; `ContactId` added (Contact ID when customer is Contact, `null` for Account); `InitiatedBy` normalised to clean lowercase GUID. Optional diagnostic fields `SelectedPhoneField` and `SelectedPhoneLabel` added. |
 | v1.0.2 | 2026-05-27 | Alex Yurpolsky | Added 8 configurable PCF input properties (Contact Number 1–4, Account Number 1–4). System customizers can now select which phone fields appear per control instance using predefined dropdowns. New Account field: `address1_telephone1` (Address Phone). Defaults preserve existing behavior. |
 | v1.0.1 | 2026-05-27 | Alex Yurpolsky | UI refinements: compact row-based phone list, number-first layout with label right-aligned, tighter spacing. Renamed control display name to "Proactive Engagement Phone Selector". Fixed publisher prefix from `alexed` to `alex` (solution recreated). Updated property display names: "Proactive Engagement Payload", "Case Customer". Corrected all user-facing text. Solution version bumped to 1.1. |
