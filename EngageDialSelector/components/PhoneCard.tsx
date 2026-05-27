@@ -1,11 +1,15 @@
 /**
  * Proactive Engagement Phone Selector — PhoneCard Component
- * Version: 1.0.6
+ * Version: 1.0.7
  *
  * A compact, keyboard-accessible selectable row representing a single phone number.
  * Number is the primary visual element; label is secondary and right-aligned.
- * Invalid phone numbers (failing E.164 validation) are rendered in a disabled
- * state with a warning indicator and are not selectable.
+ *
+ * Invalid phone numbers (failing E.164 validation) are rendered with:
+ *  - A grayed-out disabled radio (visible but not active)
+ *  - The original phone number and label unchanged
+ *  - A subtle "Invalid phone number format." message below the number
+ *  - No selection capability
  */
 
 import * as React from "react";
@@ -54,37 +58,23 @@ export const PhoneCard: React.FC<IPhoneCardProps> = ({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
-      {/* Radio circle — hidden for invalid cards */}
-      {isValid && (
-        <div className="engagedial-phone-card__radio" aria-hidden="true">
-          <div className="engagedial-phone-card__radio-dot" />
-        </div>
-      )}
-
-      {/* Warning icon for invalid cards */}
-      {!isValid && (
-        <div className="engagedial-phone-card__invalid-icon" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-            <path
-              d="M10 2a8 8 0 1 0 0 16A8 8 0 0 0 10 2Zm0 4.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 6.5Zm0 7a.875.875 0 1 1 0-1.75.875.875 0 0 1 0 1.75Z"
-              fill="#C50F1F"
-            />
-          </svg>
-        </div>
-      )}
-
-      {/* Number (primary) + label (secondary, right-aligned) */}
-      <div className="engagedial-phone-card__info">
-        <span className="engagedial-phone-card__number">{phone.number}</span>
-        <span className="engagedial-phone-card__label">{phone.label}</span>
+      {/* Radio circle — always visible; grayed out when invalid */}
+      <div className="engagedial-phone-card__radio" aria-hidden="true">
+        <div className="engagedial-phone-card__radio-dot" />
       </div>
 
-      {/* Inline invalid message */}
-      {!isValid && (
-        <div className="engagedial-phone-card__invalid-msg">
-          Invalid format
+      {/* Content column: number + label row, then optional validation message */}
+      <div className="engagedial-phone-card__content">
+        <div className="engagedial-phone-card__info">
+          <span className="engagedial-phone-card__number">{phone.number}</span>
+          <span className="engagedial-phone-card__label">{phone.label}</span>
         </div>
-      )}
+        {!isValid && (
+          <div className="engagedial-phone-card__invalid-msg" role="alert">
+            Invalid phone number format.
+          </div>
+        )}
+      </div>
     </div>
   );
 };

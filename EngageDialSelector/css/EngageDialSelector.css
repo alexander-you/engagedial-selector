@@ -827,44 +827,56 @@
    INVALID PHONE NUMBER STATE
    ============================================================ */
 
-/* Invalid card — not selectable; muted appearance */
+/* Invalid card — subtle background, no hover interaction */
 .engagedial-phone-card--invalid {
   cursor: default;
-  opacity: 1;
-  background: #fdf6f6;
-  border-color: #fde7e7;
+  background: #fafafa;
+  border-color: #e0e0e0;
+  /* Allow the card to grow vertically for the extra message row */
+  align-items: flex-start;
+  padding-top: 9px;
+  padding-bottom: 9px;
 }
 
 .engagedial-phone-card--invalid:hover {
-  background: #fdf6f6;
-  border-color: #fde7e7;
+  background: #fafafa;
+  border-color: #e0e0e0;
 }
 
-/* Warning icon replaces the radio circle */
-.engagedial-phone-card__invalid-icon {
-  flex-shrink: 0;
+/* Disabled radio — same size as normal but grayed out, no fill */
+.engagedial-phone-card--invalid .engagedial-phone-card__radio {
+  border-color: #c8c8c8;
+  background: #f0f0f0;
+  margin-top: 2px; /* align with first text line */
+}
+
+.engagedial-phone-card--invalid .engagedial-phone-card__radio-dot {
+  display: none;
+}
+
+/* Content column — wraps the number/label row + validation message */
+.engagedial-phone-card__content {
+  flex: 1;
+  min-width: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
+  flex-direction: column;
+  gap: 3px;
 }
 
-/* Phone number text — muted for invalid */
+/* Muted number text for invalid */
 .engagedial-phone-card--invalid .engagedial-phone-card__number {
-  color: #8a8a8a;
+  color: #616161;
 }
 
+/* Label keeps its normal style */
 .engagedial-phone-card--invalid .engagedial-phone-card__label {
   color: #a0a0a0;
 }
 
-/* "Invalid format" inline message — shown below the number row */
+/* Validation message — below the number, subtle amber/warning tone */
 .engagedial-phone-card__invalid-msg {
-  width: 100%;
   font-size: 11px;
-  color: #C50F1F;
-  margin-top: 2px;
-  padding-left: 22px; /* aligns under the number text */
+  color: #8a4a00;
+  font-style: italic;
 }
 

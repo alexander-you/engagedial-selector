@@ -1,6 +1,6 @@
 # Proactive Engagement Phone Selector
 
-> **Version:** v1.0.6  
+> **Version:** v1.0.7  
 > **Internal Name:** EngageDial Selector  
 > **Target Table:** Case (`incident`)  
 > **Control Type:** PCF Field Control (Virtual / React)  
@@ -484,6 +484,7 @@ pac solution import \
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| v1.0.7 | 2026-05-27 | Alex Yurpolsky | Improved invalid phone number UI. Invalid cards now show a grayed-out disabled radio, the original phone number in muted text, the field label in its normal position, and a subtle italic "Invalid phone number format." message stacked below the number. The number is never hidden or replaced by the validation message. A `__content` column wrapper was added to PhoneCard to support the two-row layout. Heavy red styling removed in favour of a neutral muted look with amber warning text. |
 | v1.0.6 | 2026-05-27 | Alex Yurpolsky | Added client-side phone number validation and E.164 normalization. Invalid numbers (missing `+` prefix, wrong length, unsupported format) are shown in the list but marked with a warning icon and "Invalid format" label — they cannot be selected. The `Prepare engagement` button remains disabled until a valid number is selected. The `DestinationPhoneNumber` field in the JSON payload now always contains the E.164 normalized value (e.g. `+972542556677`), not the raw Dataverse value. A defensive server-side check remains recommended in the downstream Flow. |
 | v1.0.5 | 2026-05-27 | Alex Yurpolsky | UI refinement of collapsed header: removed redundant title from toggle bar; added subtle neutral phone line icon; collapsed state shows clean single-line summary. Removed CardHeader from non-ready states. Version bump to bust browser cache. |
 | v1.0.4 | 2026-05-27 | Alex Yurpolsky | Added configurable `Default Display Mode` PCF property (Expanded / Collapsed / Auto). Expanded: control loads fully open. Collapsed: loads with compact summary header only. Auto: loads expanded when `alex_proactive_engagement` is empty, collapsed when a payload already exists. Added expand/collapse toggle bar with chevron icon, customer name, customer type, and number of available phones. Collapsed state preserves selected phone number and shows it in the summary. |
