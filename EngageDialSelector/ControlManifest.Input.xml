@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest>
+  <control namespace="EngageDial"
+           constructor="EngageDialSelector"
+           version="1.0.3"
+           display-name-key="Proactive Engagement Phone Selector"
+           description-key="Displays available phone numbers from the Case customer and prepares the selected number for proactive engagement."
+           control-type="virtual">
+
+    <external-service-usage enabled="false" />
+
+    <property name="engagementField"
+              display-name-key="Proactive Engagement Payload"
+              description-key="Stores the selected customer phone number and related engagement context prepared by the Proactive Engagement Phone Selector PCF control."
+              of-type="SingleLine.Text"
+              usage="bound"
+              required="true" />
+
+    <property name="customerId"
+              display-name-key="Case Customer"
+              description-key="The Case customer lookup used by the control to retrieve Contact or Account phone numbers."
+              of-type="Lookup.Customer"
+              usage="bound"
+              required="false" />
+
+    <property name="contactField1"
+              display-name-key="Contact Number 1"
+              description-key="Select the first Contact phone field to display in the control. This number will appear first when the Case customer is a Contact."
+              of-type="Enum"
+              usage="input"
+              required="false">
+      <value name="mobilephone" display-name-key="Mobile Phone">Mobile Phone</value>
+      <value name="telephone1"  display-name-key="Telephone 1">Telephone 1</value>
+      <value name="telephone2"  display-name-key="Telephone 2">Telephone 2</value>
+      <value name="telephone3"  display-name-key="Telephone 3">Telephone 3</value>
+      <value name="none"        display-name-key="None">None</value>
+    </property>
+
+    <property name="contactField2"
+              display-name-key="Contact Number 2"
+              description-key="Select the second Contact phone field to display in the control. Use None if an additional Contact number is not required."
+              of-type="Enum"
+              usage="input"
+              required="false">
+      <value name="mobilephone" display-name-key="Mobile Phone">Mobile Phone</value>
+      <value name="telephone1"  display-name-key="Telephone 1">Telephone 1</value>
+      <value name="telephone2"  display-name-key="Telephone 2">Telephone 2</value>
+      <value name="telephone3"  display-name-key="Telephone 3">Telephone 3</value>
+      <value name="none"        display-name-key="None">None</value>
+    </property>
+
+    <property name="contactField3"
+              display-name-key="Contact Number 3"
+              description-key="Select the third Contact phone field to display in the control. Empty phone values will not be shown to the agent."
+              of-type="Enum"
+              usage="input"
+              required="false">
+      <value name="mobilephone" display-name-key="Mobile Phone">Mobile Phone</value>
+      <value name="telephone1"  display-name-key="Telephone 1">Telephone 1</value>
+      <value name="telephone2"  display-name-key="Telephone 2">Telephone 2</value>
+      <value name="telephone3"  display-name-key="Telephone 3">Telephone 3</value>
+      <value name="none"        display-name-key="None">None</value>
+    </property>
+
+    <property name="contactField4"
+              display-name-key="Contact Number 4"
+              description-key="Select the fourth Contact phone field to display in the control. This allows up to four Contact phone numbers to be configured."
+              of-type="Enum"
+              usage="input"
+              required="false">
+      <value name="mobilephone" display-name-key="Mobile Phone">Mobile Phone</value>
+      <value name="telephone1"  display-name-key="Telephone 1">Telephone 1</value>
+      <value name="telephone2"  display-name-key="Telephone 2">Telephone 2</value>
+      <value name="telephone3"  display-name-key="Telephone 3">Telephone 3</value>
+      <value name="none"        display-name-key="None">None</value>
+    </property>
+
+    <property name="accountField1"
+              display-name-key="Account Number 1"
+              description-key="Select the first Account phone field to display in the control. This number will appear first when the Case customer is an Account."
+              of-type="Enum"
+              usage="input"
+              required="false">
+      <value name="telephone1"          display-name-key="Main Phone">Main Phone</value>
+      <value name="telephone2"          display-name-key="Other Phone">Other Phone</value>
+      <value name="telephone3"          display-name-key="Telephone 3">Telephone 3</value>
+      <value name="address1_telephone1" display-name-key="Address Phone">Address Phone</value>
+      <value name="none"                display-name-key="None">None</value>
+    </property>
+
+    <property name="accountField2"
+              display-name-key="Account Number 2"
+              description-key="Select the second Account phone field to display in the control. Use None if an additional Account number is not required."
+              of-type="Enum"
+              usage="input"
+              required="false">
+      <value name="telephone1"          display-name-key="Main Phone">Main Phone</value>
+      <value name="telephone2"          display-name-key="Other Phone">Other Phone</value>
+      <value name="telephone3"          display-name-key="Telephone 3">Telephone 3</value>
+      <value name="address1_telephone1" display-name-key="Address Phone">Address Phone</value>
+      <value name="none"                display-name-key="None">None</value>
+    </property>
+
+    <property name="accountField3"
+              display-name-key="Account Number 3"
+              description-key="Select the third Account phone field to display in the control. Empty phone values will not be shown to the agent."
+              of-type="Enum"
+              usage="input"
+              required="false">
+      <value name="telephone1"          display-name-key="Main Phone">Main Phone</value>
+      <value name="telephone2"          display-name-key="Other Phone">Other Phone</value>
+      <value name="telephone3"          display-name-key="Telephone 3">Telephone 3</value>
+      <value name="address1_telephone1" display-name-key="Address Phone">Address Phone</value>
+      <value name="none"                display-name-key="None">None</value>
+    </property>
+
+    <property name="accountField4"
+              display-name-key="Account Number 4"
+              description-key="Select the fourth Account phone field to display in the control. This allows up to four Account phone numbers to be configured."
+              of-type="Enum"
+              usage="input"
+              required="false">
+      <value name="telephone1"          display-name-key="Main Phone">Main Phone</value>
+      <value name="telephone2"          display-name-key="Other Phone">Other Phone</value>
+      <value name="telephone3"          display-name-key="Telephone 3">Telephone 3</value>
+      <value name="address1_telephone1" display-name-key="Address Phone">Address Phone</value>
+      <value name="none"                display-name-key="None">None</value>
+    </property>
+
+    <resources>
+      <code path="index.ts" order="1" />
+      <css path="css/EngageDialSelector.css" order="1" />
+      <platform-library name="React" version="16.14.0" />
+      <platform-library name="Fluent" version="9.46.2" />
+    </resources>
+
+    <feature-usage>
+      <uses-feature name="WebAPI" required="true" />
+    </feature-usage>
+
+  </control>
+</manifest>

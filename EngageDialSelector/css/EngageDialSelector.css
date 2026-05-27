@@ -1,0 +1,757 @@
+/*
+ * Proactive Engagement Phone Selector — PCF Control Stylesheet
+ * Version: 1.0.1
+ *
+ * Design language: Fluent UI-inspired, Dynamics 365-native look.
+ * v1.0.1: Redesigned phone list to compact row-based layout. Number is the
+ * primary visual focus; label is secondary and right-aligned. The list uses a
+ * single container border with thin dividers between rows instead of
+ * individual card borders, reducing visual weight significantly.
+ */
+
+/* ============================================================
+   ROOT & BOX-SIZING RESET
+   ============================================================ */
+
+.engagedial-root {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    sans-serif;
+  font-size: 13px;
+  color: #242424;
+  box-sizing: border-box;
+}
+
+.engagedial-root *,
+.engagedial-root *::before,
+.engagedial-root *::after {
+  box-sizing: inherit;
+}
+
+/* ============================================================
+   CARD CONTAINER
+   ============================================================ */
+
+.engagedial-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  max-width: 480px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.engagedial-header {
+  margin-bottom: 10px;
+}
+
+.engagedial-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #242424;
+  margin: 0 0 2px 0;
+  line-height: 1.3;
+}
+
+.engagedial-subtitle {
+  font-size: 12px;
+  color: #616161;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ============================================================
+   CUSTOMER ROW
+   ============================================================ */
+
+.engagedial-customer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.engagedial-customer-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #242424;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   BADGE  (Contact / Account)
+   ============================================================ */
+
+.engagedial-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+}
+
+.engagedial-badge-contact {
+  background: #dce9f8;
+  color: #0057a8;
+}
+
+.engagedial-badge-account {
+  background: #d5f5e3;
+  color: #00603a;
+}
+
+/* ============================================================
+   SECTION LABEL  ("Available numbers")
+   ============================================================ */
+
+.engagedial-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 5px;
+}
+
+/* ============================================================
+   PHONE LIST  — single bordered container, rows separated by dividers
+   ============================================================ */
+
+.engagedial-phone-list {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+/* ============================================================
+   PHONE ROW  — compact, flat, number-first layout
+   ============================================================ */
+
+.engagedial-phone-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  background: #fafafa;
+  user-select: none;
+  outline: none;
+  transition: background-color 0.12s ease;
+  min-height: 36px;
+}
+
+.engagedial-phone-card:last-child {
+  border-bottom: none;
+}
+
+.engagedial-phone-card:hover {
+  background: #f0f6fc;
+}
+
+.engagedial-phone-card:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(0, 120, 212, 0.35);
+}
+
+.engagedial-phone-card--selected {
+  background: #eff6fc;
+}
+
+/* Radio circle */
+.engagedial-phone-card__radio {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid #c8c8c8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+}
+
+.engagedial-phone-card--selected .engagedial-phone-card__radio {
+  border-color: #0078d4;
+  background: #0078d4;
+}
+
+.engagedial-phone-card__radio-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.engagedial-phone-card--selected .engagedial-phone-card__radio-dot {
+  opacity: 1;
+}
+
+/* Info: number (left, bold) + label (right, small grey) — inline row */
+.engagedial-phone-card__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.engagedial-phone-card__number {
+  font-size: 13px;
+  font-weight: 600;
+  color: #242424;
+  letter-spacing: 0.1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.engagedial-phone-card--selected .engagedial-phone-card__number {
+  color: #0057a8;
+}
+
+.engagedial-phone-card__label {
+  font-size: 11px;
+  color: #8a8a8a;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   ACTION BUTTON
+   ============================================================ */
+
+.engagedial-action-row {
+  margin-top: 0;
+}
+
+.engagedial-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  transition: background-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.engagedial-btn-primary {
+  background: #0078d4;
+  color: #ffffff;
+}
+
+.engagedial-btn-primary:hover:not(:disabled) {
+  background: #106ebe;
+  box-shadow: 0 2px 5px rgba(0, 120, 212, 0.25);
+}
+
+.engagedial-btn-primary:active:not(:disabled) {
+  background: #005a9e;
+}
+
+.engagedial-btn-primary:disabled {
+  background: #e0e0e0;
+  color: #a0a0a0;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   INLINE BANNERS  (success / error)
+   ============================================================ */
+
+.engagedial-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.engagedial-banner-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  line-height: 0;
+}
+
+.engagedial-banner-text {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* Success */
+.engagedial-banner-success {
+  background: #f1faf1;
+  border: 1px solid #9ecb9e;
+}
+
+.engagedial-banner-success .engagedial-banner-text {
+  color: #107c10;
+}
+
+/* Error */
+.engagedial-banner-error {
+  background: #fdf3f3;
+  border: 1px solid #f4b8b8;
+}
+
+.engagedial-banner-error .engagedial-banner-text {
+  color: #c42b1c;
+}
+
+/* ============================================================
+   LOADING SPINNER
+   ============================================================ */
+
+.engagedial-state-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0;
+  color: #616161;
+  font-size: 13px;
+}
+
+.engagedial-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #0078d4;
+  border-radius: 50%;
+  animation: engagedial-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes engagedial-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   EMPTY / INFORMATIONAL STATES
+   ============================================================ */
+
+.engagedial-state-info {
+  padding: 12px 0 4px;
+  text-align: center;
+}
+
+.engagedial-state-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+  line-height: 0;
+}
+
+.engagedial-state-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #242424;
+  margin: 0 0 4px 0;
+}
+
+.engagedial-state-message {
+  font-size: 12px;
+  color: #616161;
+  margin: 0 auto;
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+/* ============================================================
+   ROOT & BOX-SIZING RESET
+   ============================================================ */
+
+.engagedial-root {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    sans-serif;
+  font-size: 13px;
+  color: #242424;
+  box-sizing: border-box;
+}
+
+.engagedial-root *,
+.engagedial-root *::before,
+.engagedial-root *::after {
+  box-sizing: inherit;
+}
+
+/* ============================================================
+   CARD CONTAINER
+   ============================================================ */
+
+.engagedial-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 480px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.engagedial-header {
+  margin-bottom: 14px;
+}
+
+.engagedial-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #242424;
+  margin: 0 0 3px 0;
+  line-height: 1.3;
+}
+
+.engagedial-subtitle {
+  font-size: 12px;
+  color: #616161;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ============================================================
+   CUSTOMER ROW
+   ============================================================ */
+
+.engagedial-customer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  flex-wrap: wrap;
+}
+
+.engagedial-customer-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #242424;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   BADGE  (Contact / Account)
+   ============================================================ */
+
+.engagedial-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.35px;
+  flex-shrink: 0;
+}
+
+.engagedial-badge-contact {
+  background: #dce9f8;
+  color: #0057a8;
+}
+
+.engagedial-badge-account {
+  background: #d5f5e3;
+  color: #00603a;
+}
+
+/* ============================================================
+   SECTION LABEL  ("Available numbers")
+   ============================================================ */
+
+.engagedial-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #616161;
+  text-transform: uppercase;
+  letter-spacing: 0.55px;
+  margin-bottom: 7px;
+}
+
+/* ============================================================
+   PHONE LIST
+   ============================================================ */
+
+.engagedial-phone-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+/* ============================================================
+   PHONE CARD
+   ============================================================ */
+
+.engagedial-phone-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #fafafa;
+  user-select: none;
+  outline: none;
+  transition: border-color 0.14s ease, background-color 0.14s ease,
+    box-shadow 0.14s ease;
+}
+
+.engagedial-phone-card:hover {
+  border-color: #0078d4;
+  background: #f0f6fc;
+  box-shadow: 0 1px 4px rgba(0, 120, 212, 0.12);
+}
+
+.engagedial-phone-card:focus-visible {
+  border-color: #0078d4;
+  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.3);
+}
+
+.engagedial-phone-card--selected {
+  border-color: #0078d4;
+  border-left-width: 3px;
+  background: #f0f6fc;
+}
+
+/* Radio circle */
+.engagedial-phone-card__radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #c8c8c8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.14s ease, background-color 0.14s ease;
+}
+
+.engagedial-phone-card--selected .engagedial-phone-card__radio {
+  border-color: #0078d4;
+  background: #0078d4;
+}
+
+.engagedial-phone-card__radio-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  opacity: 0;
+  transition: opacity 0.14s ease;
+}
+
+.engagedial-phone-card--selected .engagedial-phone-card__radio-dot {
+  opacity: 1;
+}
+
+/* Text info */
+.engagedial-phone-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.engagedial-phone-card__label {
+  font-size: 11px;
+  color: #616161;
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.engagedial-phone-card__number {
+  font-size: 14px;
+  font-weight: 500;
+  color: #242424;
+  letter-spacing: 0.2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.engagedial-phone-card--selected .engagedial-phone-card__number {
+  color: #0057a8;
+}
+
+/* ============================================================
+   ACTION BUTTON
+   ============================================================ */
+
+.engagedial-action-row {
+  margin-top: 2px;
+}
+
+.engagedial-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 9px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  transition: background-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.engagedial-btn-primary {
+  background: #0078d4;
+  color: #ffffff;
+}
+
+.engagedial-btn-primary:hover:not(:disabled) {
+  background: #106ebe;
+  box-shadow: 0 2px 6px rgba(0, 120, 212, 0.28);
+}
+
+.engagedial-btn-primary:active:not(:disabled) {
+  background: #005a9e;
+}
+
+.engagedial-btn-primary:disabled {
+  background: #c8c8c8;
+  color: #888888;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   INLINE BANNERS  (success / error)
+   ============================================================ */
+
+.engagedial-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+.engagedial-banner-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  line-height: 0;
+}
+
+.engagedial-banner-text {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* Success */
+.engagedial-banner-success {
+  background: #f1faf1;
+  border: 1px solid #9ecb9e;
+}
+
+.engagedial-banner-success .engagedial-banner-text {
+  color: #107c10;
+}
+
+/* Error */
+.engagedial-banner-error {
+  background: #fdf3f3;
+  border: 1px solid #f4b8b8;
+}
+
+.engagedial-banner-error .engagedial-banner-text {
+  color: #c42b1c;
+}
+
+/* ============================================================
+   LOADING SPINNER
+   ============================================================ */
+
+.engagedial-state-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0;
+  color: #616161;
+  font-size: 13px;
+}
+
+.engagedial-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #0078d4;
+  border-radius: 50%;
+  animation: engagedial-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes engagedial-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   EMPTY / INFORMATIONAL STATES
+   ============================================================ */
+
+.engagedial-state-info {
+  padding: 14px 0 6px;
+  text-align: center;
+}
+
+.engagedial-state-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  line-height: 0;
+}
+
+.engagedial-state-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #242424;
+  margin: 0 0 6px 0;
+}
+
+.engagedial-state-message {
+  font-size: 12px;
+  color: #616161;
+  margin: 0 auto;
+  line-height: 1.65;
+  max-width: 320px;
+}
