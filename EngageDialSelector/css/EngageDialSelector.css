@@ -873,10 +873,10 @@
   color: #a0a0a0;
 }
 
-/* Validation message — below the number, subtle amber/warning tone */
+/* Validation message — below the number, clear red warning */
 .engagedial-phone-card__invalid-msg {
-  font-size: 11px;
-  color: #8a4a00;
-  font-style: italic;
+  font-size: 12px;
+  color: #C50F1F;
+  font-style: normal;
 }
 

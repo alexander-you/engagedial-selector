@@ -2,7 +2,7 @@
 <manifest>
   <control namespace="EngageDial"
            constructor="EngageDialSelector"
-           version="1.0.7"
+           version="1.0.8"
            display-name-key="Proactive Engagement Phone Selector"
            description-key="Displays available phone numbers from the Case customer and prepares the selected number for proactive engagement."
            control-type="virtual">
